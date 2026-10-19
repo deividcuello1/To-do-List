@@ -26,10 +26,10 @@ export class UserService {
     this._isLogged.update((value: boolean) => true);
   }
 
-  login(email: string, password: string) {
+  login(email: string, password: string): void {
     this._loading.set(true);
     this.http.get<ResponseGetData<User>>(this.API_URL).subscribe((response) => {
-      const user = response['data'].result.find((obj: any) => obj.email == email);
+      const user = response['data'].result.find((obj: User) => obj.email == email);
       if (user && password == 'adminadmin') {
         this._isLoggedTracker.set(false);
         this._loading.set(false);
@@ -47,7 +47,7 @@ export class UserService {
   //   return this.http.get<BaseResponse<User>>(`${this.API_URL}/${id}`);
   // }
 
-  logout() {
+  logout(): void {
     if (this.isLogged()) {
       this._loading.set(true);
       this._isLoggedTracker.set(false);

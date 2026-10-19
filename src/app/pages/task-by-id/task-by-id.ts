@@ -8,7 +8,7 @@ import { ArrowLeft } from '@primeicons/angular/arrow-left';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
-  imports: [RouterLink, AngleLeft, ArrowLeft, ProgressSpinnerModule],
+  imports: [RouterLink, ArrowLeft, ProgressSpinnerModule],
   selector: 'app-task-by-id',
   styleUrl: './task-by-id.css',
   templateUrl: './task-by-id.html',

@@ -54,7 +54,6 @@ import { InputIconModule } from 'primeng/inputicon';
 })
 export class TaskListComponent {
   @ViewChild('dt') table: Table;
-  @ViewChild('selectedStatusOption') selectedStatusOption1: any;
   private taskService: TaskService = inject(TaskService);
   private userService = inject(UserService);
   private http = inject(HttpClient);
@@ -62,7 +61,7 @@ export class TaskListComponent {
   readonly recordCounter = this.taskService.recordCounter;
   readonly userNames = this.taskService.userNames;
   router = inject(Router);
-  taskData = {};
+  taskData: any = {};
   dialogVisibility = signal<boolean>(false);
   currentPage = signal<number>(0);
   titleFilter = signal<string>('');
@@ -74,6 +73,7 @@ export class TaskListComponent {
   selectedStatusOption = '';
   selectedPriorityOption = '';
   selectedAssigneeIdsOption = '';
+  selectedNameOption = '';
   userNamesOptionList = signal<object[]>([]);
   constructor() {
     effect(() => {
@@ -82,7 +82,7 @@ export class TaskListComponent {
       }
     });
     effect(() => {
-      const users: any[] = [];
+      const users: object[] = [];
       for (const [key, value] of Object.entries(this.userNames())) {
         users.push({ label: value, value: key });
       }
@@ -150,10 +150,6 @@ export class TaskListComponent {
     this.dialogVisibility.update((value: boolean) => !value);
   }
 
-  handleDialogClose() {
-    console.log('heey');
-  }
-
   editingTask(task: Task) {
     this.taskService.activateEdition();
     this.taskData = task;
@@ -168,16 +164,20 @@ export class TaskListComponent {
     alert(message);
   }
 
-  statusOptionList: any[] | undefined;
+  statusOptionList: object[] | undefined;
 
-  priorityOptionList: any[] | undefined;
+  priorityOptionList: object[] | undefined;
 
   removeTask(id: number) {
     this.taskService.removeData(id);
   }
 
-  resetFilters() {
-    this.taskService.getAllTasks();
+  resetFilters($event) {
+    this.taskService.applyFilters();
+    this.selectedStatusOption = '';
+    this.selectedPriorityOption = '';
+    this.selectedAssigneeIdsOption = '';
+    this.selectedNameOption = '';
   }
 
   ngOnInit() {

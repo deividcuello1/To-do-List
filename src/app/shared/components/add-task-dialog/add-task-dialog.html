@@ -1,6 +1,13 @@
 <p-toast />
 <div class="flex justify-center">
-  <p-dialog [(visible)]="visible" [modal]="true" [style]="{ width: '25rem' }">
+  <p-dialog
+    [(visible)]="visible"
+    [modal]="true"
+    [draggable]="false"
+    [resizable]="false"
+    [style]="{ width: '25rem' }"
+    (visibleChange)="deactiveEdition()"
+  >
     <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
       <h1 class="text-2xl font-medium">Formulario de tareas</h1>
       <div class="flex flex-col">
@@ -84,7 +91,11 @@
           class="border border-gray-300 outline-0 rounded-[0.7rem]"
         />
       </div>
-      <button pButton [disabled]="taskForm.invalid" class="bg-blue-300 p-2 font-medium cursor-pointer rounded-[0.7rem]">
+      <button
+        [disabled]="taskForm.invalid"
+        pButton
+        class="bg-blue-300 p-2 font-medium cursor-pointer rounded-[0.7rem]"
+      >
         Submit
       </button>
     </form>

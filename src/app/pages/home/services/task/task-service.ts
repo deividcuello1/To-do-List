@@ -6,6 +6,7 @@ import { environment } from '../../../../../environments/environment.development
 import { UserService } from '../../../../core/auth/services/user-service';
 import { BaseResponse } from '../../../../shared/models/baseResponse';
 import { ResponseGetData } from '../../../../shared/models/responseGetData';
+import { User } from '../../../../core/models/user';
 
 @Injectable({ providedIn: 'root' })
 export class TaskService {
@@ -50,11 +51,11 @@ export class TaskService {
     this.getUserNames();
   }
 
-  activateEdition() {
+  activateEdition(): void {
     this._isEditing.set(true);
   }
 
-  deactivateEdition() {
+  deactivateEdition(): void {
     this._isEditing.set(false);
   }
 
@@ -63,10 +64,10 @@ export class TaskService {
   }
 
   callingUsersAPIWithPage(page) {
-    return this.http.get(`http://127.0.0.1:3000/api/users?page=${page}`);
+    return this.http.get<ResponseGetData<User>>(`http://127.0.0.1:3000/api/users?page=${page}`);
   }
 
-  counterByStatus() {
+  counterByStatus(): void  {
     this.http.get(this.API_URL).subscribe((response) => {
       let totalPages = response['data'].pageCount;
       const tasks = response['data'].result;
@@ -116,7 +117,7 @@ export class TaskService {
     });
   }
 
-  getUserNames() {
+  getUserNames(): void  {
     this.http.get(`http://127.0.0.1:3000/api/users?page=1`).subscribe((response) => {
       let totalPages = response['data'].pageCount;
       const users = response['data'].result;
@@ -140,7 +141,7 @@ export class TaskService {
     });
   }
 
-  getAllTasks() {
+  getAllTasks(): void {
     this._loading.set(true);
     this.http.get<ResponseGetData<Task>>(this.API_URL).subscribe((response) => {
       this._taskList.set(response['data'].result);
@@ -157,7 +158,7 @@ export class TaskService {
     return this.http.get<BaseResponse<Task>>(`${this.API_URL}/${id}`);
   }
 
-  addData(task: Task) {
+  addData(task: Task): void {
     const userId = JSON.parse(localStorage.getItem('user') ?? '[]')[0].id;
     const sendingTask = {
       title: task.title,
@@ -172,7 +173,7 @@ export class TaskService {
       .subscribe((response) => (response['success'] ? this.getAllTasks() : ''));
   }
 
-  updateTask(task: Task) {
+  updateTask(task: Task): void {
     this.http
       .put<BaseResponse<Task>>(`${this.API_URL}/${task.id}`, task)
       .subscribe((response) => (response['success'] ? this.getAllTasks() : ''));
@@ -186,7 +187,7 @@ export class TaskService {
     priority: string = '',
     assigneeId: number = 0,
     sortBy = '',
-  ) {
+  ): void {
     this._loading.set(true);
     const url = new URL(`${this.API_URL}`);
     if (currentPage) url.searchParams.set('page', currentPage.toString());
@@ -203,7 +204,7 @@ export class TaskService {
     });
   }
 
-  removeData(id: number | undefined) {
+  removeData(id: number | undefined): void {
     this.http
       .delete(`${this.API_URL}/${id}`)
       .subscribe((response) => (response['success'] ? this.getAllTasks() : ''));

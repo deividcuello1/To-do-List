@@ -5,6 +5,7 @@ import { PreventDefaultEventPlugin } from './prevent-default-event-plugin.servic
 import { routes } from './app.routes';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeuix/themes/aura';
+import { provideHttpClient } from '@angular/common/http';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -30,5 +31,6 @@ export const appConfig: ApplicationConfig = {
       },
       // unstyled: true
     }),
+    provideHttpClient()
   ]
 };

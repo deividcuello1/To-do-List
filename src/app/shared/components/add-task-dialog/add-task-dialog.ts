@@ -11,6 +11,7 @@ import { LabelModule } from 'primeng/label';
 import { ButtonDirective } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { Table } from 'primeng/table';
 
 @Component({
   imports: [
@@ -34,7 +35,8 @@ export class AddTaskDialog {
   @ViewChild('prioritySelect') prioritySelect;
   visible: boolean = false;
   dialogVisibility = input<boolean>();
-  task = input<any>();
+  dt = input<Table<Task>>();
+  task = input<Task>();
   taskService = inject(TaskService);
   private messageService = inject(MessageService);
   readonly isEditing = this.taskService.isEditing;
@@ -71,18 +73,22 @@ export class AddTaskDialog {
     effect(() => {
       if (this.isEditing()) {
         this.taskForm.patchValue({
-          title: this.task().title,
-          description: this.task().description,
-          status: this.task().status,
-          priority: this.task().priority,
-          dueDate: this.task().dueDate,
+          title: this.task()!.title,
+          description: this.task()!.description,
+          status: this.task()!.status,
+          priority: this.task()!.priority,
+          dueDate: this.task()!.dueDate,
         });
-        this.statusSelect.value = this.task().status;
+        this.statusSelect.value = this.task()!.status;
       }
     });
   }
 
-  showSuccess() {
+  deactiveEdition(): void {
+    this.taskService.deactivateEdition();
+  }
+
+  showSuccess(): void {
     this.messageService.add({
       severity: 'success',
       summary: 'Tarea guardada exitosamente',
@@ -90,7 +96,7 @@ export class AddTaskDialog {
     });
   }
 
-  showUpdate() {
+  showUpdate(): void {
     this.messageService.add({
       severity: 'success',
       summary: 'Tarea actualizada exitosamente',
@@ -98,7 +104,7 @@ export class AddTaskDialog {
     });
   }
 
-  showError() {
+  showError(): void {
     this.messageService.add({
       severity: 'error',
       summary: 'Hubo un error',
@@ -106,7 +112,7 @@ export class AddTaskDialog {
     });
   }
 
-  closeDialog() {
+  closeDialog(): void {
     this.visible = false;
   }
 
@@ -129,7 +135,7 @@ export class AddTaskDialog {
 
     this.taskForm.value.dueDate = modifiedDate;
     if (this.isEditing()) {
-      const updatedTask = { ...this.task(), ...this.taskForm.value };
+      const updatedTask: any = { ...this.task(), ...this.taskForm.value };
       this.taskService.updateTask(updatedTask);
       this.taskForm.patchValue({
         title: '',
@@ -140,6 +146,7 @@ export class AddTaskDialog {
       });
       this.showUpdate();
       this.closeDialog();
+      this.taskService.applyFilters();
       return;
     }
     this.taskService.addData(this.taskForm.value as Task);

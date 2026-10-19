@@ -1,0 +1,92 @@
+<p-toast />
+<div class="flex justify-center">
+  <p-dialog [(visible)]="visible" [modal]="true" [style]="{ width: '25rem' }">
+    <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+      <h1 class="text-2xl font-medium">Formulario de tareas</h1>
+      <div class="flex flex-col">
+        <label pLabel>Titulo</label>
+        <input
+          pInputText
+          formControlName="title"
+          placeholder="Introduzca su titulo"
+          class="border border-gray-300 outline-0 rounded-[0.7rem] px-2"
+        />
+      </div>
+      @if (
+        (this.taskForm.get('title')?.touched || this.taskForm.get('title')?.dirty) &&
+        this.taskForm.get('title')?.hasError('minlength')
+      ) {
+        <span class="text-red-500 text-[0.75rem]"
+          >Debes de escribir el titulo con un mínimo de 3 caracteres</span
+        >
+      }
+      <div class="flex flex-col">
+        <label pLabel>Descripcion</label>
+        <textarea
+          pTextarea
+          formControlName="description"
+          placeholder="Introduzca su descripcion"
+          class="border border-gray-300 outline-0 rounded-[0.7rem] px-2 resize-none h-40"
+        ></textarea>
+        @if (
+          ((this.taskForm.get('description')?.touched || this.taskForm.get('description')?.dirty) &&
+            this.taskForm.get('description')?.hasError('required')) ||
+          this.taskForm.get('description')?.hasError('minlength')
+        ) {
+          <span class="text-red-500 text-[0.75rem]"
+            >Debes de escribir la descripcion con un minimo de 15 caracteres</span
+          >
+        }
+      </div>
+      <div class="flex justify-between w-full gap-2">
+        <div class="flex flex-col w-1/2">
+          <label pLabel>Estado</label>
+          <p-select
+            [options]="status"
+            [(ngModel)]="statusSelectedValue"
+            [filter]="true"
+            [checkmark]="true"
+            #statusSelect
+            optionLabel="label"
+            formControlName="status"
+            filterBy="label"
+            required
+            appendTo="body"
+            class="border border-gray-300 outline-0 rounded-[0.7rem] px-2 w-full"
+          >
+          </p-select>
+        </div>
+        <div class="flex flex-col w-1/2">
+          <label pLabel>Prioridad</label>
+          <p-select
+            [options]="priority"
+            [(ngModel)]="prioritySelectedValue"
+            [filter]="true"
+            [checkmark]="true"
+            #prioritySelect
+            optionLabel="label"
+            formControlName="priority"
+            filterBy="label"
+            appendTo="body"
+            class="border border-gray-300 outline-0 rounded-[0.7rem] px-2 w-full"
+          >
+          </p-select>
+        </div>
+      </div>
+      <div class="flex flex-col">
+        <label pLabel>Fecha limite</label>
+        <p-datepicker
+          [readonlyInput]="true"
+          selectionMode="range"
+          formControlName="dueDate"
+          dateFormat="yy/mm/dd"
+          selectionMode="single"
+          class="border border-gray-300 outline-0 rounded-[0.7rem]"
+        />
+      </div>
+      <button pButton [disabled]="taskForm.invalid" class="bg-blue-300 p-2 font-medium cursor-pointer rounded-[0.7rem]">
+        Submit
+      </button>
+    </form>
+  </p-dialog>
+</div>

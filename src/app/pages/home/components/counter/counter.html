@@ -1,0 +1,18 @@
+<div class="py-5">
+  <h2 class="text-3xl font-medium">Contadores de tareas</h2>
+</div>
+<div class="flex gap-5 mb-10 items-start justify-start [&>*]:rounded-lg">
+  <div class="bg-gray-100 text-gray-700 flex flex-col items-center justify-center p-10">
+    <span class="text-xl">Tareas pendientes</span>
+    <span class="text-5xl font-medium">{{ statusCounter()['pending'] }}</span>
+  </div>
+
+  <div class="bg-sky-100 text-sky-700 flex flex-col items-center justify-center p-10">
+    <span class="text-xl">Tareas en progreso</span>
+    <span class="text-5xl font-medium">{{ statusCounter()['in_progress'] }}</span>
+  </div>
+  <div class="bg-green-100 text-green-700 flex flex-col items-center justify-center p-10">
+    <span class="text-xl">Tareas completadas</span>
+    <span class="text-5xl font-medium">{{ statusCounter()['done'] }}</span>
+  </div>
+</div>

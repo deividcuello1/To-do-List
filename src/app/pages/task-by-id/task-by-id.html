@@ -1,0 +1,56 @@
+<div
+  class="flex flex-col gap-5 justify-start mx-auto mt-5 w-[20rem][&>*]:w-full shadow-xl/20 rounded-2xl bg-white p-5 max-w-160"
+>
+  <a
+    [routerLink]="['/tareas']"
+    class="mt-5 bg-gray-100 text-gray-800 font-medium w-fit py-2 px-5 rounded-2xl flex items-center gap-1"
+    ><svg data-p-icon="arrow-left" color="333333" [size]="18"></svg> Volver a tareas</a
+  >
+
+  @if (task() != undefined && userNames()[task()!.assigneeId]) {
+    <div>
+      <h1 class="font-bold text-3xl">{{ task()!.title }}</h1>
+    </div>
+    <div class="flex gap-2">
+      <span class="text-sky-700 bg-sky-100 py-1 px-3 text-sm rounded-lg font-medium">
+        @if (task()!.status == 'in_progress') {
+          En progreso
+        }
+        @if (task()!.status == 'pending') {
+          Pendiente
+        }
+        @if (task()!.status == 'done') {
+          Completado
+        }
+      </span>
+      <span class="text-red-700 bg-red-100 py-1 px-3 text-sm rounded-lg font-medium">
+        @if (task()!.priority == 'low') {
+          Baja
+        }
+        @if (task()!.priority == 'medium') {
+          Media
+        }
+        @if (task()!.priority == 'high') {
+          Alta
+        }
+      </span>
+    </div>
+    <div class="border-b border-gray-200 pb-7">
+      <p class="text-gray-400 font-medium whitespace-pre-wrap">{{ task()!.description }}</p>
+    </div>
+    <div class="flex justify-between">
+      <div>
+        <p class="text-gray-500 font-medium">Fecha limite</p>
+        <span class="text-gray-400 text-[0.80rem] font-medium">{{ task()!.dueDate }}</span>
+      </div>
+      <div>
+        <p class="text-gray-500 font-medium">Responsable</p>
+        <span class="text-gray-400 text-[0.80rem] font-medium">{{ userNames()[task()!.assigneeId] }}</span>
+      </div>
+    </div>
+  } @else {
+    <div class="flex justify-center">
+      <p-progress-spinner ariaLabel="loading" />
+    </div>
+  }
+</div>

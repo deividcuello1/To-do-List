@@ -1,0 +1,84 @@
+<!-- <ul class="[&>*]:flex [&>*]:justify-between [&>*]:border-b [&>*]:pb-2 [&>*]:pl-2 [&>*]:pr-2 [&>*]:border-b-gray-300 min-w-[20rem] mt-4">
+    <li>
+        <p [ngClass]="{ 'line-through bg-gray-300': isCompletedTemp}" class="p-1">{{item()}}</p>
+        <div class="flex gap-2 ml-2">
+            <button (click)="openTask()" class="bg-blue-700 text-white pl-2 pr-2 cursor-pointer">Ver</button>
+            <button (click)="toggleIsCompleted()" (click)="notifyParentCompleted()" class="bg-yellow-700 text-white pl-2 pr-2 cursor-pointer">
+                @if(!isCompletedTemp){
+                    Completar
+                } @else{
+                    No completar
+                }
+            </button>
+        </div>
+    </li>
+</ul> -->
+<!-- 
+<td class="px-6 py-4">{{ item() }}</td>
+<td class="px-6 py-4">
+  <button
+    (click)="removeTask()"
+    (click)="notifyParentDeleted()"
+    class="bg-red-700 text-white pl-2 pr-2 cursor-pointer"
+  >
+    Eliminar
+  </button>
+</td> -->
+
+<tr class="bg-neutral-primary [&>*]:border-b [&>*]:border-gray-300">
+  <td class="px-6 py-4">
+    {{ task()!.title }}
+  </td>
+  <td class="px-6 py-4">
+    @if(task()!.status == 'done') {Completada}
+    @if(task()!.status == 'in_progress') {En progreso}
+    @if(task()!.status == 'pending') {Pendiente}
+  </td>
+  <td class="px-6 py-4">
+    <!-- {{ task()!.priority }} -->
+    @if(task()!.priority == 'low') {Baja}
+    @if(task()!.priority == 'medium') {Media}
+    @if(task()!.priority == 'high') {Alta}
+  </td>
+  <td class="px-6 py-4">
+    {{ task()!.dueDate }}
+  </td>
+  <td class="px-6 py-4">
+    {{ task()!.assigneeId }}
+  </td>
+  <td>
+    <div class="flex items-center gap-1">
+      <button (click)="openTask()" class="bg-blue-100 shadow pl-2 pr-2 pt-1 pb-1 cursor-pointer">
+        Abrir
+      </button>
+      <button
+        (click)="putTaskDone()"
+        /* (click)="notifyParentCompleted()" */
+        class="bg-green-100 shadow pl-2 pr-2 pt-1 pb-1 cursor-pointer"
+      >
+        Done
+      </button>
+      <button
+        (click)="putTaskInProgress()"
+        /* (click)="notifyParentCompleted()" */
+        class="bg-yellow-100 shadow pl-2 pr-2 pt-1 pb-1 cursor-pointer"
+      >
+        In progress
+      </button>
+      <button
+        (click)="putTaskPending()"
+        /* (click)="notifyParentCompleted()" */
+        class="bg-blue-100 shadow pl-2 pr-2 pt-1 pb-1 cursor-pointer"
+      >
+        Pending
+      </button>
+      <button
+        (click)="removeTask()"
+        /* (click)="notifyParentDeleted()" */
+        class="bg-red-100 shadow pl-2 pr-2 pt-1 pb-1 cursor-pointer"
+      >
+        Eliminar
+      </button>
+    </div>
+  </td>
+</tr>

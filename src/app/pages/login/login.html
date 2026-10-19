@@ -1,0 +1,47 @@
+<p-toast />
+@if(loading()){
+  <div class="max-w-160 mx-auto mt-10 border border-gray-100 shadow-lg pt-2 pb-2 pl-5 pr-5">
+    <form>
+      <div>
+        <img
+          src="https://codigofuente.com.do/web/image/website/2/logo?unique=5fdb8b9"
+          alt=""
+          class="w-40 mx-auto"
+        />
+      </div>
+      <div>
+        <label for="usernameInput">Correo</label>
+        <input
+          type="email"
+          name="usernameInput"
+          [(ngModel)]="usernameInputValue"
+          autocomplete="off"
+          placeholder="Introduzca su usuario"
+          class="border w-full border-gray-300 pl-2 pr-2 pt-1 pb-1 outline-0"
+        />
+      </div>
+      <div class="mt-5">
+        <label for="passwordInput">Password</label>
+        <input
+          type="password"
+          name="passwordInput"
+          [(ngModel)]="passwordInputValue"
+          autocomplete="off"
+          placeholder="Introduzca su password"
+          class="border w-full border-gray-300 pl-2 pr-2 pt-1 pb-1 outline-0"
+        />
+      </div>
+      <button
+        (click)="onSubmit()"
+        class="bg-blue-500 pl-3 pr-3 pt-2 pb-2 mt-3 font-medium text-white cursor-pointer w-full"
+      >
+        Iniciar sesión
+      </button>
+    </form>
+  </div>
+}
+@if(!loading()){
+  <div class="flex justify-center">
+    <p-progress-spinner ariaLabel="loading" />
+  </div>
+}

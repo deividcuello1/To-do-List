@@ -1,0 +1,246 @@
+<app-add-task-dialog
+  [task]="taskData"
+  [dialogVisibility]="dialogVisibility()"
+  (onHide)="handleDialogClose()"
+></app-add-task-dialog>
+
+<p-confirmdialog />
+
+<app-counter></app-counter>
+<div class="border-t border-gray-200 py-5">
+  <h2 class="text-3xl font-medium">Tareas</h2>
+</div>
+<div class="flex mb-5 justify-between items-end gap-10 max-w-full pb-2">
+  <div class="flex gap-4 items-end [&>*]:flex [&>*]:gap-1">
+    <div class="flex flex-col">
+      <label class="text-sm">Titulo</label>
+      <input
+        type="text"
+        (input)="dt.filter($event.target.value, 'title', 'contain')"
+        class="border border-gray-300 outline-0 rounded-lg h-[2.2rem] px-2 bg-white"
+        placeholder="Buscar por titulo"
+      />
+    </div>
+    <div class="flex flex-col text-sm">
+      <label pLabel>Usuario</label>
+      <p-select
+        [options]="userNamesOptionList()"
+        [(ngModel)]="selectedAssigneeIdsOption"
+        [filter]="true"
+        [checkmark]="true"
+        (onChange)="dt.filter(selectedAssigneeIdsOption, 'assigneeId', 'contain')"
+        optionLabel="label"
+        filterBy="label"
+        placeholder="Buscar por nombre de usuario"
+        class="border border-gray-300 outline-0 rounded-[0.7rem] px-2 w-full"
+      >
+      </p-select>
+    </div>
+    <div class="flex flex-col text-sm">
+      <label pLabel>Estado</label>
+      <p-select
+        [options]="statusOptionList"
+        [(ngModel)]="selectedStatusOption"
+        [filter]="true"
+        [checkmark]="true"
+        (onChange)="dt.filter(selectedStatusOption, 'status', 'contain')"
+        optionLabel="label"
+        filterBy="label"
+        placeholder="Buscar por estado"
+        class="border border-gray-300 outline-0 rounded-[0.7rem] px-2 w-full"
+      >
+      </p-select>
+    </div>
+    <div class="flex flex-col text-sm">
+      <label pLabel>Prioridad</label>
+      <p-select
+        [options]="priorityOptionList"
+        [(ngModel)]="selectedPriorityOption"
+        [checkmark]="true"
+        [filter]="true"
+        (onChange)="dt.filter(selectedPriorityOption, 'priority', 'contain')"
+        optionLabel="label"
+        filterBy="label"
+        placeholder="Buscar por prioridad"
+        class="border border-gray-300 outline-0 rounded-[0.7rem] px-2 w-full"
+      >
+      </p-select>
+    </div>
+  </div>
+  <div class="flex gap-2">
+    <button
+      pButton
+      (click)="resetFilters()"
+      class="bg-white! text-gray-700! border border-gray-700!"
+    >
+      <span class="text-nowrap"> Resetear filtros </span>
+    </button>
+    <button pButton (click)="addTask()">
+      <span class="text-nowrap flex items-center gap-1">
+        <svg data-p-icon="plus" color="FFFFFF" [size]="18" class="cursor-pointer"></svg>Agregar
+        tarea
+      </span>
+    </button>
+  </div>
+</div>
+
+@if (filteredTasks().length == 0) {
+  <div class="flex justify-center text-4xl mb-10">
+    <span class="font-medium">Tareas no encontradas</span>
+  </div>
+}
+
+<p-table
+  #dt
+  [value]="filteredTasks()"
+  [tableStyle]="{ 'min-width': '50rem' }"
+  [paginator]="true"
+  [rows]="10"
+  [lazy]="true"
+  [loading]="loading()"
+  (onLazyLoad)="loadTasks($event)"
+  [totalRecords]="recordCounter()"
+  [rowsPerPageOptions]="[10, 20, 50]"
+  [globalFilterFields]="['title', 'status', 'priority', 'assigneeId']"
+  [showCurrentPageReport]="true"
+  currentPageReportTemplate="Mostrando {first}-{last} de {totalRecords} tareas"
+>
+  @if (filteredTasks().length > 0) {
+    <ng-template #header>
+      <tr>
+        <th pSortableColumn="title" class="font-bold bg-gray-200">
+          Titulo <p-sort-icon field="title"></p-sort-icon>
+        </th>
+        <th class="font-bold bg-gray-200">Estado</th>
+        <th class="font-bold bg-gray-200">Descripcion</th>
+        <th pSortableColumn="priority" class="font-bold bg-blue-200">
+          Prioridad <p-sort-icon field="priority" />
+        </th>
+        <th pSortableColumn="dueDate" class="font-bold bg-gray-200">
+          Fecha limite <p-sort-icon field="dueDate" />
+        </th>
+        <th class="font-bold bg-gray-200">Responsable</th>
+        <th class="font-bold bg-gray-200">Acciones</th>
+      </tr>
+      <!-- <th>
+      <p-column-filter
+        type="text"
+        field="title"
+        placeholder="Buscar por titulo"
+        ariaLabel="Filter Name"
+        matchMode="in"
+        [showMenu]="false"
+      ></p-column-filter>
+    </th>
+    <th>
+      <p-column-filter field="status" matchMode="equals" [showMenu]="false">
+        <ng-template #filter let-value let-filter="filterCallback">
+          <p-select
+            [options]="statusOptionList"
+            (onChange)="filter($event.value)"
+            placeholder="Any"
+            optionLabel="label"
+            optionValue="value"
+            size="small"
+            style="min-width: 12rem"
+            appendTo="body"
+          >
+          </p-select>
+        </ng-template>
+      </p-column-filter>
+    </th>
+    <th></th>
+    <th>
+      <p-column-filter field="priority" matchMode="equals" [showMenu]="false">
+        <ng-template #filter let-value let-filter="filterCallback">
+          <p-select
+            [options]="priorityOptionList"
+            (onChange)="filter($event.value)"
+            placeholder="Any"
+            optionLabel="label"
+            optionValue="value"
+            size="small"
+            style="min-width: 12rem"
+            appendTo="body"
+          >
+          </p-select>
+        </ng-template>
+      </p-column-filter>
+    </th>
+    <th></th>
+    <th>
+      <p-column-filter
+        type="text"
+        field="assigneeId"
+        placeholder="Buscar por id"
+        ariaLabel="Filter id"
+        [showMenu]="false"
+      ></p-column-filter>
+    </th> -->
+    </ng-template>
+
+    <ng-template #body let-task>
+      <tr>
+        <td class="text-nowrap py-5!">{{ task.title }}</td>
+        <td class="text-nowrap">
+          @if (task.status == 'in_progress') {
+            <span class="bg-sky-100 text-sky-700 py-1 px-3 rounded-lg font-medium">
+              En progreso
+            </span>
+          }
+          @if (task.status == 'done') {
+            <span class="bg-green-100 text-green-700 py-1 px-3 rounded-lg font-medium">
+              Completado
+            </span>
+          }
+          @if (task.status == 'pending') {
+            <span class="bg-gray-100 text-gray-700 py-1 px-3 rounded-lg font-medium">
+              Pendiente
+            </span>
+          }
+        </td>
+        <td class="text-nowrap max-w-120 truncate">{{ task.description }}</td>
+        <td class="text-nowrap">
+          @if (task.priority == 'low') {
+            <span class="bg-gray-100 text-gray-700 py-1 px-3 rounded-lg font-medium"> Baja </span>
+          }
+          @if (task.priority == 'medium') {
+            <span class="bg-orange-100 text-orange-700 py-1 px-3 rounded-lg font-medium">
+              Media
+            </span>
+          }
+          @if (task.priority == 'high') {
+            <span class="bg-red-100 text-red-700 py-1 px-3 rounded-lg font-medium"> Alta </span>
+          }
+        </td>
+        <td class="text-nowrap">{{ task.dueDate }}</td>
+        <td>{{ userNames()[task.assigneeId] }}</td>
+        <td>
+          <div class="flex gap-3">
+            <svg
+              [size]="18"
+              (click)="openTask(task.id)"
+              data-p-icon="eye"
+              color="9C9C1E"
+              class="cursor-pointer"
+            ></svg>
+            <svg
+              [size]="18"
+              (click)="editingTask(task)"
+              data-p-icon="file-edit"
+              color="2795F5"
+              class="cursor-pointer"
+            ></svg>
+            <svg
+              [size]="18"
+              (click)="confirm1($event, task.id)"
+              data-p-icon="trash"
+              color="F54927"
+              class="cursor-pointer"
+            ></svg>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  }
+</p-table>

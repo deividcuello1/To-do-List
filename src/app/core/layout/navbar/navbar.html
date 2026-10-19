@@ -1,0 +1,36 @@
+<header class="pt-2 pb-2 pr-10 pl-10 w-full bg-gray-800">
+  <nav class="flex justify-between items-center">
+    <div>
+      <a [routerLink]="['/']">
+        <img
+          src="https://codigofuente.com.do/web/image/website/2/logo?unique=5fdb8b9"
+          alt=""
+          class="w-20"
+        />
+      </a>
+    </div>
+    <div class="flex items-center gap-7">
+        <div>
+            <span class="text-white text-sm">
+                @if(userEmail()) {
+                    {{userEmail()}}
+                }
+            </span>
+        </div>
+        <div>
+            @if (!isLogged()) {
+              <a [routerLink]="['/login']" class="pl-2 pr-2 pt-1 pb-1"
+                ><svg data-p-icon="sign-out" color="FFFFFF" [size]="18"></svg></a
+              >
+            } @else {
+              <a
+                (click)="logout()"
+                [routerLink]="['/login']"
+                class="px-3 py-1 text-white font-medium rounded-[0.90rem]"
+                ><svg data-p-icon="sign-out" color="FFFFFF" [size]="18"></svg></a
+              >
+            }
+        </div>
+    </div>
+  </nav>
+</header>
